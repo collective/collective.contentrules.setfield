@@ -7,6 +7,7 @@ from Products.CMFPlone import utils
 from Products.statusmessages.interfaces import IStatusMessage
 from collective.contentrules.setfield import SetFieldMessageFactory as _
 from collective.contentrules.setfield.interfaces import ISetFieldAction
+from collective.contentrules.setfield.restricted import PyScript
 
 from plone.app.contentrules.browser.formhelper import AddForm
 from plone.app.contentrules.browser.formhelper import EditForm
@@ -25,14 +26,12 @@ class SetFieldAction(SimpleItem):
     """The actual persistent implementation of the action element.
     """
     implements(ISetFieldAction, IRuleElementData)
-
     value_script = ""
     element = "collective.contentrules.setfield.ApplySetField"
 
     @property
     def summary(self):
-        return _(u"Set field values",
-                 mapping=dict(field=self.field))
+        return _(u"Set field values")
 
 
 class SetFieldActionExecutor(object):
@@ -49,15 +48,41 @@ class SetFieldActionExecutor(object):
 
     def __call__(self):
         obj = self.event.object
-        field = getattr(self.element, 'field', False)
-        bypasspermissions = getattr(self.element, 'bypasspermissions', False)
-        # TODO: Handle execution of content rule
+        value_script = getattr(self.element, 'value_script', False)
+
+        # Provide the current workflow state of the context
+        state = ''
+        wft = self.context.portal_workflow
+        cur_wf = wft.getWorkflowsFor(obj)
+        if len(cur_wf) > 0:
+            cur_wf = cur_wf[0].id
+            state = wft.getStatusOf(cur_wf, obj)['review_state']
+
+        cp = PyScript(value_script)
+        cp_globals = dict(context=obj,
+                          state=state,
+                          workflow=wft,
+                          history={i: obj.workflow_history[i] for i in
+                                   obj.workflow_history},
+                          event=self.event,
+                          values={})
+        try:
+            script = cp.execute(cp_globals)
+        except Exception as e:
+            self.error(obj, e)
+            return False
+
+        for v_key, value in script['values'].iteritems():
+            logger.info('Setting %s to %s for %s' % (v_key, value, obj.id))
+            setattr(obj, v_key, value)
+
         return True
 
     def error(self, obj, error):
-
         title = utils.pretty_title_or_id(obj, obj)
-        message = _(u"Unable to apply local roles on %s: %s" % (title, error))
+        message = _(u"Unable to set values on %s: %s, %s" % (title,
+                                                             str(type(error)),
+                                                             error))
         logger.error(message)
         if self.request is not None:
             IStatusMessage(self.request).addStatusMessage(message, type="error")
