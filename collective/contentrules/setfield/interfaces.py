@@ -4,11 +4,12 @@ from zope import schema
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 
-items = [
-            ('', u'Select'),
-            ('object', u'Just the object'),
-            ('all', u'All matching objects')]
-terms = [ SimpleTerm(value=pair[0], token=pair[0], title=pair[1]) for pair in items ]
+items = [('', u'Select'),
+         ('object', u'Just the object'),
+         ('all', u'All matching objects')]
+terms = [SimpleTerm(value=pair[0], token=pair[0], title=pair[1])
+         for pair in items]
+
 
 class ISetFieldAction(model.Schema):
 
@@ -21,7 +22,7 @@ class ISetFieldAction(model.Schema):
         default=_(u"""# values = {'field': some_value}"""),
         required=True)
 
-    update_all_content = schema.Choice(
+    update_all = schema.Choice(
         title=_("Update all content?"),
         description=_(u""),
         vocabulary=SimpleVocabulary(terms)
@@ -36,6 +37,6 @@ class ISetFieldAction(model.Schema):
     model.fieldset(
         'advanced',
         label=_(u"Advanced"),
-        fields=['update_all_content']
+        fields=['update_all']
 
     )

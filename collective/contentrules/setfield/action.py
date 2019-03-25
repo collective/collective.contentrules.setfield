@@ -33,6 +33,7 @@ class SetFieldAction(SimpleItem):
     """
     implements(ISetFieldAction, IRuleElementData)
     value_script = ""
+    update_all = ""
     element = "collective.contentrules.setfield.ApplySetField"
 
     @property
@@ -55,7 +56,7 @@ class SetFieldActionExecutor(object):
     def __call__(self):
         self.obj = self.event.object
         self.value_script = getattr(self.element, 'value_script', False)
-        self.update_all = getattr(self.element, 'update_all_content', False)
+        self.update_all = getattr(self.element, 'update_all', False)
         self.conditions = self.get_conditions()
         self.portal = api.portal.get()
 
