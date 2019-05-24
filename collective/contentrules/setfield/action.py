@@ -222,7 +222,6 @@ class SetFieldEditForm(EditForm):
     """An edit form for local roles action.
     """
     form_fields = form.FormFields(ISetFieldAction)
-    label = _(u"Edit a Move to Field Action")
-    description \
-        = _(u"An action for setting the value of a field on an object.")
+    label = _(u"Edit a Set Field Action")
+    description = _(u"An action for setting the value of a field on an object.")
     schema = ISetFieldAction
