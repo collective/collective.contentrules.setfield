@@ -51,6 +51,7 @@ class SetFieldActionExecutor(object):
         self.context = context
         self.element = element
         self.request = getattr(self.context, 'REQUEST', None)
+        self.warnings = []
         self.event = event
 
     def __call__(self):
@@ -87,6 +88,20 @@ class SetFieldActionExecutor(object):
                 self.error(self.obj, e)
                 return False
 
+        # If there are < 5 warnings, display them as messages. Otherwise we
+        # set a more generic message & point the user to the zope logs.
+        if self.request is not None and len(self.warnings) > 0:
+            if len(self.warnings) < 6:
+                for warning in self.warnings:
+                    IStatusMessage(self.request).addStatusMessage(warning,
+                                                                  type="warn")
+            else:
+                IStatusMessage(self.request).addStatusMessage(
+                    _(u"%i objects could not be updated. Please see the debug"
+                      u"logs for more information." % len(self.warnings)),
+                    type="warn"
+                )
+
         return True
 
     def error(self, obj, error):
@@ -97,6 +112,13 @@ class SetFieldActionExecutor(object):
         logger.error(message)
         if self.request is not None:
             IStatusMessage(self.request).addStatusMessage(message, type="error")
+
+    def warn(self, url, warning):
+        message = _(u"Unable to update %s - %s: %s" % (url,
+                                                       str(type(warning)),
+                                                       warning))
+        logger.warn(message)
+        self.warnings.append(message)
 
     def get_conditions(self):
         """ Returns the rules conditions for the executing action"""
@@ -139,7 +161,16 @@ class SetFieldActionExecutor(object):
         logger.info('Searching with query: %s' % str(query))
         catalog = self.portal.portal_catalog
         object_search = catalog.search(query)
-        return [brain.getObject() for brain in object_search]
+        objects = []
+        # If the catalog is broken for some reason, we are likely to see
+        # exceptions when calling getObject() on a brain. Instead of just
+        # failing the whole operation, we warn the user and skip those items.
+        for brain in object_search:
+            try:
+                objects.append(brain.getObject())
+            except KeyError as keyerror:
+                self.warn(brain.Title(), keyerror)
+        return objects
 
     def process_script(self, item):
         state = ''
