@@ -1,7 +1,6 @@
 # -*- coding:utf-8 -*-
 from logging import getLogger
 
-
 from OFS.SimpleItem import SimpleItem
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone import utils
@@ -9,7 +8,6 @@ from Products.statusmessages.interfaces import IStatusMessage
 from collective.contentrules.setfield import SetFieldMessageFactory as _
 from collective.contentrules.setfield.interfaces import ISetFieldAction
 from collective.contentrules.setfield.restricted import PyScript
-
 from plone.app.contentrules.browser.formhelper import AddForm
 from plone.app.contentrules.browser.formhelper import EditForm
 from plone import api
@@ -79,7 +77,8 @@ class SetFieldActionExecutor(object):
                         passing = False
                         break
                 if passing is False:
-                    logger.warning('Not executing setField action on %s' % item)
+                    logger.warning('Not executing setField action on %s'
+                                   % item)
                     continue
 
             try:
@@ -111,7 +110,8 @@ class SetFieldActionExecutor(object):
                                                              error))
         logger.error(message)
         if self.request is not None:
-            IStatusMessage(self.request).addStatusMessage(message, type="error")
+            IStatusMessage(self.request).addStatusMessage(message,
+                                                          type="error")
 
     def warn(self, url, warning):
         message = _(u"Unable to update %s - %s: %s" % (url,
@@ -208,7 +208,8 @@ class SetFieldAddForm(AddForm):
     """
     form_fields = form.FormFields(ISetFieldAction)
     label = _(u"Add a Set Field Value Action")
-    description = _(u"An action for setting the value of a field on an object.")
+    description = \
+        _(u"An action for setting the value of a field on an object.")
     schema = ISetFieldAction
 
     def create(self, data):
@@ -222,5 +223,6 @@ class SetFieldEditForm(EditForm):
     """
     form_fields = form.FormFields(ISetFieldAction)
     label = _(u"Edit a Move to Field Action")
-    description = _(u"An action for setting the value of a field on an object.")
+    description \
+        = _(u"An action for setting the value of a field on an object.")
     schema = ISetFieldAction
