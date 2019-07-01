@@ -178,7 +178,7 @@ class SetFieldActionExecutor(object):
             try:
                 objects.append(brain.getObject())
             except KeyError as keyerror:
-                self.warn(brain.Title(), keyerror)
+                self.warn(brain.Title, keyerror)
         return objects
 
     def process_script(self, item):
