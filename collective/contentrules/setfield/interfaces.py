@@ -16,9 +16,10 @@ class ISetFieldAction(model.Schema):
     value_script = schema.Text(
 
         title=_(u"Value Script"),
-        description=_(u"Enter PythonScript to calculate the values you want to "
-                      u"set. Return a dictionary of {'field': value}. Available"
-                      u"variables are: context, state, history, event"),
+        description=_(u"Enter PythonScript to calculate the values you want to"
+                      u" set. Return a dictionary of {'field': value}. "
+                      u"Available variables are: context, state, history, "
+                      u"event"),
         default=_(u"""# values = {'field': some_value}"""),
         required=True)
 
