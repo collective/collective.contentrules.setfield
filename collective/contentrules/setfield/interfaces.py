@@ -29,6 +29,13 @@ class ISetFieldAction(model.Schema):
         vocabulary=SimpleVocabulary(terms)
     )
 
+    preserve_modification_date = schema.Bool(
+        title=_("Preserve modification date?"),
+        description=_("Does not change the modification date. Beware that the"
+                      "action that triggered the rule may update the "
+                      "modification date and this setting will not override it")
+    )
+
     model.fieldset(
         'script',
         label=_(u"Script"),
@@ -38,6 +45,6 @@ class ISetFieldAction(model.Schema):
     model.fieldset(
         'advanced',
         label=_(u"Advanced"),
-        fields=['update_all']
+        fields=['update_all', 'preserve_modification_date']
 
     )
