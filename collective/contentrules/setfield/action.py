@@ -56,6 +56,9 @@ class SetFieldActionExecutor(object):
         self.obj = self.event.object
         self.value_script = getattr(self.element, 'value_script', False)
         self.update_all = getattr(self.element, 'update_all', False)
+        self.preserve_modification_date = getattr(self.element,
+                                                  'preserve_modification_date',
+                                                  False)
         self.conditions = self.get_conditions()
         self.portal = api.portal.get()
 
@@ -82,7 +85,13 @@ class SetFieldActionExecutor(object):
                     continue
 
             try:
+                old_date = None
+                if self.preserve_modification_date is True:
+                    old_date = item.modification_date
                 self.process_script(item)
+                if self.preserve_modification_date is True:
+                    item.modification_date = old_date
+                    item.reindexObject(idxs='modified')
             except Exception as e:
                 self.error(self.obj, e)
                 return False
