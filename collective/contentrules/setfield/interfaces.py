@@ -25,7 +25,10 @@ class ISetFieldAction(model.Schema):
 
     update_all = schema.Choice(
         title=_("Update all content?"),
-        description=_(u""),
+        description=_(u"Walks the site to update all matching content as well "
+                      u"as the item that triggered the content rule. May take"
+                      u"a long time to complete depending on how many objects"
+                      u"need to be updated."),
         vocabulary=SimpleVocabulary(terms)
     )
 
