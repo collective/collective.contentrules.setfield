@@ -9,7 +9,7 @@
 
     <adapter factory=".action.SetFieldActionExecutor" />
 
-     <browser:page
+    <browser:page
         for="plone.app.contentrules.browser.interfaces.IRuleActionAdding"
         name="collective.contentrules.setfield.ApplySetField"
         class=".action.SetFieldAddForm"
@@ -22,7 +22,6 @@
         class=".action.SetFieldEditForm"
         permission="cmf.ManagePortal"
         />
-
 
     <plone:ruleAction
         name="collective.contentrules.setfield.ApplySetField"
