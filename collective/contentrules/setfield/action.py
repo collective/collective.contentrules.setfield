@@ -54,8 +54,8 @@ class SetFieldActionExecutor(object):
 
     def __call__(self):
         self.obj = self.event.object
-        self.value_script = getattr(self.element, 'value_script', False)
-        self.update_all = getattr(self.element, 'update_all', False)
+        self.value_script = getattr(self.element, 'value_script', '')
+        self.update_all = getattr(self.element, 'update_all', 'object')
         self.preserve_modification_date = getattr(self.element,
                                                   'preserve_modification_date',
                                                   False)
@@ -142,10 +142,11 @@ class SetFieldActionExecutor(object):
         return rule.conditions
 
     def get_objects(self):
-        query = {}
-        if self.update_all is None or self.update_all == 'object':
-            query['UID'] = IUUID(self.obj)
 
+        if self.update_all is None or self.update_all == 'object':
+            return [self.obj]
+
+        query = {}
         if self.update_all and self.update_all == 'all':
             # Build query based on rule conditions. Each resulting item has
             # its rule checked, so the search can return extra items.
@@ -167,7 +168,6 @@ class SetFieldActionExecutor(object):
                 # TODO: workflow state
                 # TODO: workflow transition
 
-        logger.info('Searching with query: %s' % str(query))
         catalog = self.portal.portal_catalog
         object_search = catalog.search(query)
         objects = []
@@ -205,7 +205,6 @@ class SetFieldActionExecutor(object):
         for v_key, value in script['values'].iteritems():
             if value is None and getattr(item, v_key, None) is None:
                 continue
-            logger.info('Setting %s to %s for %s' % (v_key, value, item.id))
             setattr(item, v_key, value)
             item_updated = True
         if item_updated:
