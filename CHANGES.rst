@@ -13,3 +13,6 @@ Changelog
 
 - Add configurable option to preserve modification date of updated objects.
   [instification]
+
+- Add 'Objects parent modified' trigger and handler to contentrules.
+  [instification]
