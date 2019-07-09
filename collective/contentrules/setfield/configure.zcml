@@ -35,4 +35,20 @@
         factory=".action.SetFieldAction"
         />
 
+    <interface
+        interface="collective.contentrules.setfield.interfaces.IParentModifiedEvent"
+        type="plone.contentrules.rule.interfaces.IRuleEventType"
+        name="Objects parent modified"
+        />
+
+    <subscriber
+        for="zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+        handler=".handlers.modified"
+        />
+
+    <subscriber
+        for="collective.contentrules.setfield.interfaces.IParentModifiedEvent"
+        handler="plone.app.contentrules.handlers.modified"
+        />
+
 </configure>

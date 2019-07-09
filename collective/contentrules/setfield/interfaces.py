@@ -1,6 +1,7 @@
 from collective.contentrules.setfield import SetFieldMessageFactory as _
 from plone.supermodel import model
 from zope import schema
+from zope.component.interfaces import IObjectEvent
 from zope.schema.vocabulary import SimpleTerm
 from zope.schema.vocabulary import SimpleVocabulary
 
@@ -53,3 +54,7 @@ class ISetFieldAction(model.Schema):
         fields=['update_all', 'preserve_modification_date']
 
     )
+
+
+class IParentModifiedEvent(IObjectEvent):
+    """An objects parent has been modified"""
