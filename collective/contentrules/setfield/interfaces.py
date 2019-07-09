@@ -34,9 +34,11 @@ class ISetFieldAction(model.Schema):
 
     preserve_modification_date = schema.Bool(
         title=_("Preserve modification date?"),
-        description=_("Does not change the modification date. Beware that the"
-                      "action that triggered the rule may update the "
-                      "modification date and this setting will not override it")
+        description=_(
+            "Does not change the modification date. Beware that the action that"
+            " triggered the rule may update the modification date and this "
+            "setting will not override it"),
+        default=False
     )
 
     model.fieldset(

@@ -32,6 +32,7 @@ class SetFieldAction(SimpleItem):
     implements(ISetFieldAction, IRuleElementData)
     value_script = ""
     update_all = ""
+    preserve_modification_date = ""
     element = "collective.contentrules.setfield.ApplySetField"
 
     @property
