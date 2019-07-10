@@ -30,7 +30,8 @@ class ISetFieldAction(model.Schema):
                       u"as the item that triggered the content rule. May take"
                       u"a long time to complete depending on how many objects"
                       u"need to be updated."),
-        vocabulary=SimpleVocabulary(terms)
+        vocabulary=SimpleVocabulary(terms),
+        default=u'object'
     )
 
     preserve_modification_date = schema.Bool(

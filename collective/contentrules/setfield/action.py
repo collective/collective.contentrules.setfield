@@ -30,9 +30,9 @@ class SetFieldAction(SimpleItem):
     """The actual persistent implementation of the action element.
     """
     implements(ISetFieldAction, IRuleElementData)
-    value_script = ""
-    update_all = ""
-    preserve_modification_date = ""
+    value_script = None
+    update_all = None
+    preserve_modification_date = None
     element = "collective.contentrules.setfield.ApplySetField"
 
     @property
