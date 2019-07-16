@@ -206,8 +206,9 @@ class SetFieldActionExecutor(object):
         for v_key, value in script['values'].iteritems():
             if value is None and getattr(item, v_key, None) is None:
                 continue
-            setattr(item, v_key, value)
-            item_updated = True
+            if getattr(item, v_key) != value:
+                setattr(item, v_key, value)
+                item_updated = True
         if item_updated:
             item.reindexObject()
 
