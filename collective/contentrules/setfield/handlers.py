@@ -6,6 +6,7 @@ from zope.interface import implements
 from collective.contentrules.setfield.interfaces import IParentModifiedEvent
 from zope.event import notify
 
+
 def modified(event):
     """ When an object is modified, fire the ParentModifiedEvent for its
         direct descendents.
@@ -16,7 +17,12 @@ def modified(event):
             IFolderish.providedBy(obj)):
         return
 
-    children = obj.getFolderContents()
+    # IObjectModified event is called when a site is created, but before the
+    # catalog has been initialised which throws an AttributeError exception.
+    try:
+        children = obj.getFolderContents()
+    except AttributeError:
+        return
     for child in children:
         notify(ParentModifiedEvent(child.getObject()))
 
