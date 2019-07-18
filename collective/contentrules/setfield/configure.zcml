@@ -2,10 +2,20 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:plone="http://namespaces.plone.org/plone"
     xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="plone">
 
     <include package="plone.contentrules" />
     <include package="plone.contentrules" file="meta.zcml" />
+
+    <genericsetup:registerProfile
+      name="tests"
+      title="collective.contentrules.setfield"
+      directory="profiles/tests"
+      description="Installs the collective.contentrules package"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      for="Products.CMFPlone.interfaces.IMigratingPloneSiteRoot"
+      />
 
     <adapter factory=".action.SetFieldActionExecutor" />
 
