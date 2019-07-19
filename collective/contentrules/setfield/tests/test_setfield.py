@@ -21,7 +21,11 @@ class SetFieldAction(unittest.TestCase):
         self.document = api.content.create(
             type="Document", title="document", container=self.folder
         )
-
+        self.date_preserving_document = api.content.create(
+            type="Document",
+            title="date_preserving_document",
+            container=self.portal,
+        )
         self.portal.portal_setup.runAllImportStepsFromProfile(
             "profile-collective.contentrules.setfield:tests", purge_old=False
         )
@@ -53,4 +57,24 @@ class SetFieldAction(unittest.TestCase):
 
         self.assertNotEqual(
             title_before_parent_modified, title_after_parent_modified
+        )
+
+    def test_preserve_modification_date(self):
+        document = self.date_preserving_document
+
+        title_before_action = document.title
+        self.assertEqual(document.title, "date_preserving_document")
+        modification_date_before_action = (
+            document.modification_date.asdatetime()
+        )
+
+        notify(ObjectModifiedEvent(document))
+
+        title_after_action = document.title
+        self.assertEqual(document.title, "Title set by SetField")
+        modification_date_after_action = document.modification_date.asdatetime()
+
+        self.assertNotEqual(title_before_action, title_after_action)
+        self.assertNotEqual(
+            modification_date_before_action, modification_date_after_action
         )

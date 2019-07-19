@@ -20,6 +20,17 @@
       </action>
     </actions>
   </rule>
+  <rule name="object-modified-date-preserving" title="Object Modified - Change Title - Preserve Date" cascading="False" description="" enabled="True" event="zope.lifecycleevent.interfaces.IObjectModifiedEvent" stop-after="False">
+    <conditions/>
+    <actions>
+      <action type="collective.contentrules.setfield.ApplySetField">
+        <property name="update_all">object</property>
+        <property name="preserve_modification_date">True</property>
+        <property name="value_script">values = {'title': 'Title set by SetField'}</property>
+      </action>
+    </actions>
+  </rule>
   <assignment name="object-modified" bubbles="True" enabled="True" location=""/>
   <assignment name="object-parent-modified" bubbles="True" enabled="True" location=""/>
+  <assignment name="object-modified-date-preserving" bubbles="True" enabled="True" location="date-preserving-document"/>
 </contentrules>
