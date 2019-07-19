@@ -10,6 +10,16 @@
       </action>
     </actions>
   </rule>
+  <rule name="object-parent-modified" title="Object Parent Modified - Change Title" cascading="False" description="" enabled="True" event="collective.contentrules.setfield.interfaces.IParentModifiedEvent" stop-after="False">
+    <conditions/>
+    <actions>
+      <action type="collective.contentrules.setfield.ApplySetField">
+        <property name="update_all">object</property>
+        <property name="preserve_modification_date">False</property>
+        <property name="value_script">values = {'title': 'Title set by SetField'}</property>
+      </action>
+    </actions>
+  </rule>
   <assignment name="object-modified" bubbles="True" enabled="True" location=""/>
-  <assignment name="rule-1" bubbles="True" enabled="True" location=""/>
+  <assignment name="object-parent-modified" bubbles="True" enabled="True" location=""/>
 </contentrules>
