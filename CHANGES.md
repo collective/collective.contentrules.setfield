@@ -16,3 +16,6 @@ Changelog
 
 - Add 'Objects parent modified' trigger and handler to contentrules.
   [instification]
+
+- Add unit tests.
+  [JeffersonBledsoe]
