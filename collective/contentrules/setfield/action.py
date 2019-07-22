@@ -14,7 +14,6 @@ from plone import api
 from plone.contentrules.rule.interfaces import IExecutable
 from plone.contentrules.rule.interfaces import IRuleElementData
 from plone.contentrules.engine.interfaces import IRuleStorage
-from plone.uuid.interfaces import IUUID
 from zope.component import adapts
 from zope.component import getMultiAdapter
 from zope.component import queryUtility
@@ -232,5 +231,6 @@ class SetFieldEditForm(EditForm):
     """
     form_fields = form.FormFields(ISetFieldAction)
     label = _(u"Edit a Set Field Action")
-    description = _(u"An action for setting the value of a field on an object.")
+    description = \
+        _(u"An action for setting the value of a field on an object.")
     schema = ISetFieldAction
