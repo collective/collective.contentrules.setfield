@@ -6,7 +6,9 @@
 *.EGG
 *.egg-info
 *.EGG-INFO
+*.DS_Store
 .*.cfg
+.idea
 bin/
 build/
 develop-eggs/
@@ -16,3 +18,4 @@ fake-eggs/
 parts/
 dist/
 var/
+.vscode
