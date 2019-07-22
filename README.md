@@ -1,3 +1,5 @@
+![Build Status](https://travis-ci.org/collective/collective.contentrules.setfield.svg?branch=master "Build Status")
+
 Introduction
 ============
 

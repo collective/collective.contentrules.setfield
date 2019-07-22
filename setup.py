@@ -6,8 +6,8 @@ version = '0.9a.dev0'
 setup(name='collective.contentrules.setfield',
       version=version,
       description="A content rule for setting the value of a field on an object",
-      long_description=open("README.rst").read() + "\n" +
-      open("CHANGES.rst").read(),
+      long_description=open("README.md").read() + "\n" +
+      open("CHANGES.md").read(),
       # Get more strings from
       # http://pypi.python.org/pypi?:action=list_classifiers
       classifiers=[
@@ -32,7 +32,7 @@ setup(name='collective.contentrules.setfield',
       author='Jon Pentland',
       author_email='jon.pentland@pretagov.co.uk',
       url='https://github.com/collective/collective.contentrules.setfield',
-      license='GPL3',
+      license='GPL Version 2',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['collective', 'collective.contentrules'],
       include_package_data=True,
