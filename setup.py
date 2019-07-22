@@ -39,7 +39,8 @@ setup(name='collective.contentrules.setfield',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'plone.app.contentrules'
+          'plone.app.contentrules',
+          'zope.formlib'
       ],
       extras_require={
           'test': [
