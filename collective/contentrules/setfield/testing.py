@@ -2,6 +2,7 @@ from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import FunctionalTesting
+from plone import api
 
 
 class SetFieldLayer(PloneSandboxLayer):
@@ -14,8 +15,8 @@ class SetFieldLayer(PloneSandboxLayer):
         self.loadZCML(package=collective.contentrules.setfield)
 
     def setUpPloneSite(self, portal):
-        self.applyProfile(portal, "plone.app.contenttypes:default")
-        pass
+        if api.env.plone_version().startswith("5"):
+            self.applyProfile(portal, "plone.app.contenttypes:default")
 
 
 FIXTURE = SetFieldLayer()
