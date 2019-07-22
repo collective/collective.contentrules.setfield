@@ -44,6 +44,7 @@ setup(name='collective.contentrules.setfield',
       extras_require={
           'test': [
               'plone.app.testing',
+              'plone.api'
           ],
       },
       entry_points="""
