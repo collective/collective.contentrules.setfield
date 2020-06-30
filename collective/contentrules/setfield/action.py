@@ -84,17 +84,14 @@ class SetFieldActionExecutor(object):
                                    % item)
                     continue
 
-            try:
-                old_date = None
-                if self.preserve_modification_date is True:
-                    old_date = item.modification_date
-                self.process_script(item)
-                if self.preserve_modification_date is True:
-                    item.modification_date = old_date
-                    item.reindexObject(idxs='modified')
-            except Exception as e:
-                self.error(self.obj, e)
-                return False
+            old_date = None
+            if self.preserve_modification_date is True:
+                old_date = item.modification_date
+            result = self.process_script(item)
+            if self.preserve_modification_date is True:
+                item.modification_date = old_date
+                item.reindexObject(idxs='modified')
+            return result
 
         # If there are < 5 warnings, display them as messages. Otherwise we
         # set a more generic message & point the user to the zope logs.
@@ -187,7 +184,9 @@ class SetFieldActionExecutor(object):
         cur_wf = wft.getWorkflowsFor(item)
         if len(cur_wf) > 0:
             cur_wf = cur_wf[0].id
-            state = wft.getStatusOf(cur_wf, item)['review_state']
+            state = wft.getStatusOf(cur_wf, item)
+            if state is not None:
+                state = state['review_state']
 
         history = getattr(item, 'workflow_history', {})
         if len(history):
@@ -200,7 +199,12 @@ class SetFieldActionExecutor(object):
                           history=history,
                           event=self.event,
                           values={})
-        script = cp.execute(cp_globals)
+        try:
+            script = cp.execute(cp_globals)
+        except Exception as e:
+            self.error(self.obj, e)
+            return False
+
         item_updated = False
         for v_key, value in script['values'].iteritems():
             if value is None and getattr(item, v_key, None) is None:
@@ -210,6 +214,7 @@ class SetFieldActionExecutor(object):
                 item_updated = True
         if item_updated:
             item.reindexObject()
+        return True
 
 
 class SetFieldAddForm(AddForm):
