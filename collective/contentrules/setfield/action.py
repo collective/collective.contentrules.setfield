@@ -15,12 +15,18 @@ from plone.contentrules.rule.interfaces import IExecutable
 from plone.contentrules.rule.interfaces import IRuleElementData
 from plone.contentrules.engine.interfaces import IRuleStorage
 from zope.component import adapts
-from zope.component import getMultiAdapter
-from zope.component import queryUtility
+from zope.component import getMultiAdapter, queryMultiAdapter
+from zope.component import queryUtility, getUtility
 from zope.formlib import form
 from zope.i18n import translate
 from zope.interface import Interface
 from zope.interface import implements
+from plone.dexterity.utils import iterSchemata
+from z3c.form.interfaces import IDataManager
+from zope.schema.interfaces import ValidationError
+from zope.event import notify
+from zope.lifecycleevent import ObjectModifiedEvent, ObjectAddedEvent
+
 
 logger = getLogger('collective.contentrules.setfield')
 
@@ -204,17 +210,58 @@ class SetFieldActionExecutor(object):
         except Exception as e:
             self.error(self.obj, e)
             return False
-
+        
+        fields = self._get_fields(item)
         item_updated = False
         for v_key, value in script['values'].iteritems():
-            if value is None and getattr(item, v_key, None) is None:
+            #if value is None and getattr(item, v_key, None) is None:
+            #    continue
+            #if hasattr(item, v_key) and getattr(item, v_key) == value:
+            #    continue
+        
+            # TODO: should validate against the content type otherwise this is a security problem
+            if v_key not in fields:
+                self.error(self.obj, "Field '%s' not found so not set" % v_key)
                 continue
-            if getattr(item, v_key) != value:
-                setattr(item, v_key, value)
+        
+            schema, field = fields[v_key]
+            dm = queryMultiAdapter((item, field), IDataManager)
+            if dm.get() == value:
+                # also handles case where old value is not set and new value is None
+                continue
+            if dm is None or not dm.canWrite():
+                self.error(self.obj, "Not able to write %s" % v_key)
+                continue 
+            # TODO: Could also check permission to write however should be checked against 
+            # owner for content rule not current user. Owner is not kept
+
+            bound = field.bind(self.context)
+            try:
+                bound.validate(value)
+            except ValidationError as e:
+                self.error(self.obj, str(e))
+                continue
+
+            try:
+                dm.set(value)
                 item_updated = True
+            except Exception as e:
+                self.error(self.obj, "Error setting %s: %s" % (v_key, str(e)))
         if item_updated:
-            item.reindexObject()
+            # TODO: shouldn't it reindex just the indexes for whats changed (and SearchableText)?
+            item.reindexObject() # TODO: I think this is done in the handler below anyway
+            notify(ObjectModifiedEvent(item))
         return True
+
+    def _get_fields(self, context):
+        fields = {}
+        for schema in reversed(list(iterSchemata(context))): # main schema should override behaviours
+            from zope.schema import getFieldsInOrder
+            for fieldid, field in getFieldsInOrder(schema):
+                fields[fieldid] = (schema, field)
+        return fields
+
+
 
 
 class SetFieldAddForm(AddForm):
