@@ -6,6 +6,7 @@ from plone import api
 from plone.app.testing import TEST_USER_ID, setRoles
 from zope.event import notify
 from zope.lifecycleevent import ObjectModifiedEvent
+from Products.statusmessages.interfaces import IStatusMessage
 
 
 class SetFieldAction(unittest.TestCase):
@@ -30,6 +31,10 @@ class SetFieldAction(unittest.TestCase):
             "profile-collective.contentrules.setfield:tests", purge_old=False
         )
 
+    def assertNoError(self):
+        msgs = IStatusMessage(self.portal.REQUEST).show()
+        self.assertEqual([], [(m.type, m.message) for m in msgs if m.type!='info'])
+
     def test_trigger_script_on_object_modified(self):
         document = self.document
 
@@ -37,6 +42,7 @@ class SetFieldAction(unittest.TestCase):
         self.assertEqual(document.title, "document")
 
         notify(ObjectModifiedEvent(document))
+        self.assertNoError()
 
         title_after_action = document.title
         self.assertEqual(document.title, "Title set by SetField")
@@ -51,6 +57,7 @@ class SetFieldAction(unittest.TestCase):
         self.assertEqual(document.title, "document")
 
         notify(ParentModifiedEvent(document))
+        self.assertNoError()
 
         title_after_parent_modified = document.title
         self.assertEqual(document.title, "Title set by SetField")
@@ -69,6 +76,7 @@ class SetFieldAction(unittest.TestCase):
         )
 
         notify(ObjectModifiedEvent(document))
+        self.assertNoError()
 
         title_after_action = document.title
         self.assertEqual(document.title, "Title set by SetField")
