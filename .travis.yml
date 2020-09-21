@@ -25,7 +25,7 @@ install:
   - sed -ie "s#test-5.0.x.cfg#test-$PLONE_VERSION.x.cfg#" buildout.cfg
   - pip install -r requirements.txt
   - buildout -Nc buildout.cfg annotate
-  - buildout -Nc buildout.cfg
+  - buildout -Nc buildout.cfg -vvvvv
 script:
   - python bin/code-analysis
   - python bin/test
