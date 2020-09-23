@@ -1,7 +1,7 @@
 import unittest
 
-from collective.contentrules.setfield.testing import INTEGRATION_TESTING
 from collective.contentrules.setfield.handlers import ParentModifiedEvent
+from collective.contentrules.setfield.testing import INTEGRATION_TESTING
 from plone import api
 from plone.app.testing import TEST_USER_ID, setRoles
 from zope.event import notify
@@ -44,7 +44,6 @@ class SetFieldAction(unittest.TestCase):
         self.assertNotEqual(title_before_action, title_after_action)
 
     def test_trigger_script_on_object_parent_modified(self):
-        parent = self.folder
         document = self.document
 
         title_before_parent_modified = document.title

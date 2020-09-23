@@ -2,8 +2,7 @@ from collective.contentrules.setfield import SetFieldMessageFactory as _
 from plone.supermodel import model
 from zope import schema
 from zope.component.interfaces import IObjectEvent
-from zope.schema.vocabulary import SimpleTerm
-from zope.schema.vocabulary import SimpleVocabulary
+from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 items = [('', u'Select'),
          ('object', u'Just the object'),
@@ -31,7 +30,7 @@ class ISetFieldAction(model.Schema):
                       u"a long time to complete depending on how many objects"
                       u"need to be updated."),
         vocabulary=SimpleVocabulary(terms),
-        default=u'object'
+        default=u'object',
     )
 
     preserve_modification_date = schema.Bool(
@@ -39,20 +38,19 @@ class ISetFieldAction(model.Schema):
         description=_(
             "Does not change the modification date. Beware that the action"
             " that triggered the rule may update the modification date and"
-            " this setting will not override it")
+            " this setting will not override it"),
     )
 
     model.fieldset(
         'script',
         label=_(u"Script"),
-        fields=['value_script']
+        fields=['value_script'],
     )
 
     model.fieldset(
         'advanced',
         label=_(u"Advanced"),
-        fields=['update_all', 'preserve_modification_date']
-
+        fields=['update_all', 'preserve_modification_date'],
     )
 
 

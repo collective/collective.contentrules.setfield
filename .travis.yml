@@ -23,7 +23,7 @@ before_install:
   - echo "eggs-directory = $HOME/buildout-cache/eggs" >> $HOME/.buildout/default.cfg
 install:
   - sed -ie "s#test-5.0.x.cfg#test-$PLONE_VERSION.x.cfg#" buildout.cfg
-  - pip install zc.buildout
+  - pip install -r requirements.txt
   - buildout -Nc buildout.cfg annotate
   - buildout -Nc buildout.cfg
 script:

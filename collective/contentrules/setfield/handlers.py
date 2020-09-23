@@ -1,10 +1,9 @@
-from Products.CMFCore.interfaces import IContentish
-from Products.CMFCore.interfaces import IFolderish
-from plone.app.discussion.interfaces import IComment
-from zope.component.interfaces import ObjectEvent
-from zope.interface import implements
 from collective.contentrules.setfield.interfaces import IParentModifiedEvent
+from plone.app.discussion.interfaces import IComment
+from Products.CMFCore.interfaces import IContentish, IFolderish
+from zope.component.interfaces import ObjectEvent
 from zope.event import notify
+from zope.interface import implements
 
 
 def modified(event):
@@ -12,9 +11,11 @@ def modified(event):
         direct descendents.
     """
     obj = event.object
-    if not (IContentish.providedBy(obj) or
-            IComment.providedBy(obj) or
-            IFolderish.providedBy(obj)):
+    if not (
+        IContentish.providedBy(obj)
+        or IComment.providedBy(obj)
+        or IFolderish.providedBy(obj)
+    ):
         return
 
     # IObjectModified event is called when a site is created, but before the
