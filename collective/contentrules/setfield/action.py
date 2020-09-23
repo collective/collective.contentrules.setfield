@@ -14,14 +14,14 @@ from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone import utils
 from Products.statusmessages.interfaces import IStatusMessage
 from z3c.form.interfaces import IDataManager
-from zope.component import adapts, getMultiAdapter, queryUtility, queryMultiAdapter, getUtility
+from zope.component import (adapts, getMultiAdapter, queryMultiAdapter,
+                            queryUtility)
 from zope.event import notify
 from zope.formlib import form
 from zope.i18n import translate
 from zope.interface import Interface, implements
-from zope.lifecycleevent import ObjectModifiedEvent, ObjectAddedEvent
+from zope.lifecycleevent import ObjectModifiedEvent
 from zope.schema.interfaces import ValidationError
-
 
 logger = getLogger('collective.contentrules.setfield')
 
@@ -205,20 +205,21 @@ class SetFieldActionExecutor(object):
         except Exception as e:
             self.error(self.obj, e)
             return False
-        
+
         fields = self._get_fields(item)
         item_updated = False
         for v_key, value in script['values'].iteritems():
-            #if value is None and getattr(item, v_key, None) is None:
-            #    continue
-            #if hasattr(item, v_key) and getattr(item, v_key) == value:
-            #    continue
-        
-            # TODO: should validate against the content type otherwise this is a security problem
+            # if value is None and getattr(item, v_key, None) is None:
+            #     continue
+            # if item.get(item, v_key, None) == value:
+            #     continue
+
+            # TODO: should validate against the content type otherwise
+            #   this is a security problem
             if v_key not in fields:
                 self.error(self.obj, "Field '%s' not found so not set" % v_key)
                 continue
-        
+
             schema, field = fields[v_key]
             dm = queryMultiAdapter((item, field), IDataManager)
             if dm.get() == value:
@@ -226,9 +227,10 @@ class SetFieldActionExecutor(object):
                 continue
             if dm is None or not dm.canWrite():
                 self.error(self.obj, "Not able to write %s" % v_key)
-                continue 
-            # TODO: Could also check permission to write however should be checked against 
-            # owner for content rule not current user. Owner is not kept
+                continue
+            # TODO: Could also check permission to write however should
+            #   be checked against owner for content rule not current user.
+            #   Owner is not kept
 
             bound = field.bind(self.context)
             try:
@@ -243,20 +245,21 @@ class SetFieldActionExecutor(object):
             except Exception as e:
                 self.error(self.obj, "Error setting %s: %s" % (v_key, str(e)))
         if item_updated:
-            # TODO: shouldn't it reindex just the indexes for whats changed (and SearchableText)?
-            item.reindexObject() # TODO: I think this is done in the handler below anyway
+            # TODO: shouldn't it reindex just the indexes for
+            #   whats changed (and SearchableText)?
+            # TODO: I think this is done in the handler below anyway
+            item.reindexObject()
             notify(ObjectModifiedEvent(item))
         return True
 
     def _get_fields(self, context):
         fields = {}
-        for schema in reversed(list(iterSchemata(context))): # main schema should override behaviours
+        # main schema should override behaviours
+        for schema in reversed(list(iterSchemata(context))):
             from zope.schema import getFieldsInOrder
             for fieldid, field in getFieldsInOrder(schema):
                 fields[fieldid] = (schema, field)
         return fields
-
-
 
 
 class SetFieldAddForm(AddForm):
