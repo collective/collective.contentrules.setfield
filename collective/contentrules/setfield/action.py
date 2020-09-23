@@ -1,31 +1,26 @@
 # -*- coding:utf-8 -*-
 from logging import getLogger
 
-from OFS.SimpleItem import SimpleItem
-from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone import utils
-from Products.statusmessages.interfaces import IStatusMessage
 from collective.contentrules.setfield import SetFieldMessageFactory as _
 from collective.contentrules.setfield.interfaces import ISetFieldAction
 from collective.contentrules.setfield.restricted import PyScript
-from plone.app.contentrules.browser.formhelper import AddForm
-from plone.app.contentrules.browser.formhelper import EditForm
+from OFS.SimpleItem import SimpleItem
 from plone import api
-from plone.contentrules.rule.interfaces import IExecutable
-from plone.contentrules.rule.interfaces import IRuleElementData
+from plone.app.contentrules.browser.formhelper import AddForm, EditForm
 from plone.contentrules.engine.interfaces import IRuleStorage
-from zope.component import adapts
-from zope.component import getMultiAdapter, queryMultiAdapter
-from zope.component import queryUtility, getUtility
+from plone.contentrules.rule.interfaces import IExecutable, IRuleElementData
+from plone.dexterity.utils import iterSchemata
+from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone import utils
+from Products.statusmessages.interfaces import IStatusMessage
+from z3c.form.interfaces import IDataManager
+from zope.component import adapts, getMultiAdapter, queryUtility, queryMultiAdapter, getUtility
+from zope.event import notify
 from zope.formlib import form
 from zope.i18n import translate
-from zope.interface import Interface
-from zope.interface import implements
-from plone.dexterity.utils import iterSchemata
-from z3c.form.interfaces import IDataManager
-from zope.schema.interfaces import ValidationError
-from zope.event import notify
+from zope.interface import Interface, implements
 from zope.lifecycleevent import ObjectModifiedEvent, ObjectAddedEvent
+from zope.schema.interfaces import ValidationError
 
 
 logger = getLogger('collective.contentrules.setfield')
@@ -110,7 +105,7 @@ class SetFieldActionExecutor(object):
                 IStatusMessage(self.request).addStatusMessage(
                     _(u"%i objects could not be updated. Please see the debug"
                       u"logs for more information." % len(self.warnings)),
-                    type="warn"
+                    type="warn",
                 )
 
         return True
