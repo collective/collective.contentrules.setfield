@@ -222,7 +222,7 @@ class SetFieldActionExecutor(object):
 
             schema, field = fields[v_key]
             dm = queryMultiAdapter((item, field), IDataManager)
-            # also handles case where old value is not set and new value is None
+            # Handles case where old value is not set and new value is None
             if dm.get() == value:
                 continue
             if dm is None or not dm.canWrite():
