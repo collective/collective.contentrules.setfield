@@ -222,8 +222,8 @@ class SetFieldActionExecutor(object):
 
             schema, field = fields[v_key]
             dm = queryMultiAdapter((item, field), IDataManager)
+            # also handles case where old value is not set and new value is None
             if dm.get() == value:
-                # also handles case where old value is not set and new value is None
                 continue
             if dm is None or not dm.canWrite():
                 self.error(self.obj, "Not able to write %s" % v_key)
