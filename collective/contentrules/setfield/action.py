@@ -1,26 +1,21 @@
 # -*- coding:utf-8 -*-
 from logging import getLogger
 
-from OFS.SimpleItem import SimpleItem
-from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone import utils
-from Products.statusmessages.interfaces import IStatusMessage
 from collective.contentrules.setfield import SetFieldMessageFactory as _
 from collective.contentrules.setfield.interfaces import ISetFieldAction
 from collective.contentrules.setfield.restricted import PyScript
-from plone.app.contentrules.browser.formhelper import AddForm
-from plone.app.contentrules.browser.formhelper import EditForm
+from OFS.SimpleItem import SimpleItem
 from plone import api
-from plone.contentrules.rule.interfaces import IExecutable
-from plone.contentrules.rule.interfaces import IRuleElementData
+from plone.app.contentrules.browser.formhelper import AddForm, EditForm
 from plone.contentrules.engine.interfaces import IRuleStorage
-from zope.component import adapts
-from zope.component import getMultiAdapter
-from zope.component import queryUtility
+from plone.contentrules.rule.interfaces import IExecutable, IRuleElementData
+from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone import utils
+from Products.statusmessages.interfaces import IStatusMessage
+from zope.component import adapts, getMultiAdapter, queryUtility
 from zope.formlib import form
 from zope.i18n import translate
-from zope.interface import Interface
-from zope.interface import implements
+from zope.interface import Interface, implements
 
 logger = getLogger('collective.contentrules.setfield')
 
@@ -107,7 +102,7 @@ class SetFieldActionExecutor(object):
                 IStatusMessage(self.request).addStatusMessage(
                     _(u"%i objects could not be updated. Please see the debug"
                       u"logs for more information." % len(self.warnings)),
-                    type="warn"
+                    type="warn",
                 )
 
         return True

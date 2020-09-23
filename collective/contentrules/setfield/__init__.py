@@ -1,6 +1,5 @@
 from zope.i18nmessageid import MessageFactory
 
-
 SetFieldMessageFactory = \
     MessageFactory('collective.contentrules.setfield')
 
