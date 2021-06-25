@@ -9,7 +9,9 @@ from plone import api
 from plone.app.contentrules.browser.formhelper import AddForm, EditForm
 from plone.contentrules.engine.interfaces import IRuleStorage
 from plone.contentrules.rule.interfaces import IExecutable, IRuleElementData
+from plone.dexterity.interfaces import IDexterityContent
 from plone.dexterity.utils import iterSchemata
+from Products.ATContentTypes.interfaces import IATContentType
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone import utils
 from Products.statusmessages.interfaces import IStatusMessage
@@ -221,6 +223,20 @@ class SetFieldActionExecutor(object):
                 continue
 
             schema, field = fields[v_key]
+
+            # Handle item being an Archetypes content
+            if IATContentType.providedBy(item):
+                existing_value = field.getRaw(item)
+                if existing_value == value:
+                    continue
+                error = field.validate(value, item)
+                if error:
+                    self.error(self.obj, str(error))
+                    continue
+                field.set(item, value)
+                item_updated = True
+                continue
+
             dm = queryMultiAdapter((item, field), IDataManager)
             # Handles case where old value is not set and new value is None
             if dm.get() == value:
@@ -254,11 +270,20 @@ class SetFieldActionExecutor(object):
 
     def _get_fields(self, context):
         fields = {}
-        # main schema should override behaviours
-        for schema in reversed(list(iterSchemata(context))):
-            from zope.schema import getFieldsInOrder
-            for fieldid, field in getFieldsInOrder(schema):
-                fields[fieldid] = (schema, field)
+
+        if IATContentType.providedBy(context):
+            context_schema = context.Schema()
+            for field in context_schema.fields():
+                fields[field.getName()] = (context_schema, field)
+        elif IDexterityContent.providedBy(context):
+            # main schema should override behaviours
+            for schema in reversed(list(iterSchemata(context))):
+                from zope.schema import getFieldsInOrder
+                for fieldid, field in getFieldsInOrder(schema):
+                    fields[fieldid] = (schema, field)
+        else:
+            raise Exception("Unknown content type for context at %s" % context.absolute_url())
+
         return fields
 
 
