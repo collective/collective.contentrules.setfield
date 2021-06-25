@@ -42,12 +42,12 @@ jobs:
         run: |
             mkdir -p ~/buildout-cache/{eggs,downloads}
             mkdir ~/.buildout
-            echo "[buildout]" > $HOME/.buildout/default.cfg
-            echo "download-cache = $HOME/buildout-cache/downloads" >> $HOME/.buildout/default.cfg
-            echo "eggs-directory = $HOME/buildout-cache/eggs" >> $HOME/.buildout/default.cfg
+            echo "[buildout]" > ~/.buildout/default.cfg
+            echo "download-cache = ~/buildout-cache/downloads" >> ~/.buildout/default.cfg
+            echo "eggs-directory = ~/buildout-cache/eggs" >> ~/.buildout/default.cfg
       - name: buildout
         run: |
-          sed -ie "s#test-5.0.x.cfg#test-$PLONE_VERSION.x.cfg#" buildout.cfg
+          sed -ie "s#test-5.0.x.cfg#test-${{ matrix.plone-version }}.x.cfg#" buildout.cfg
           pip install -r requirements.txt
           buildout -Nc buildout.cfg
       - name: test
