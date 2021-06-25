@@ -282,7 +282,7 @@ class SetFieldActionExecutor(object):
                 for fieldid, field in getFieldsInOrder(schema):
                     fields[fieldid] = (schema, field)
         else:
-            raise Exception("Unknown content type for context at %s" % context.absolute_url())
+            raise Exception("Unknown content type for context at %s" % context.absolute_url())  # noqa:E501
 
         return fields
 
