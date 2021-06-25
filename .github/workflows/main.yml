@@ -49,7 +49,7 @@ jobs:
         run: |
           sed -ie "s#test-5.0.x.cfg#test-$PLONE_VERSION.x.cfg#" buildout.cfg
           pip install -r requirements.txt
-          bin/buildout -Nc buildout.cfg
+          buildout -Nc buildout.cfg
       - name: test
         run: |
             bin/test --all 
