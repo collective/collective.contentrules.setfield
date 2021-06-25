@@ -54,26 +54,8 @@ jobs:
         run: |
             bin/test --all 
       - name: code-analysis
-        run: echo "${{ matrix.plone-version }}" | grep 5.1 || bin/code-analysis  
+        run: bin/code-analysis  
       - uses: actions/setup-python@v2
         if: failure()
         with:
           python-version: 2.7            
-      - name: createcoverage
-        run: |
-            bin/coverage json -i
-      - name: Coveralls
-        uses: AndreMiras/coveralls-python-action@develop
-        with:
-          parallel: true
-          flag-name: ${{ matrix.plone-version }}-${{ matrix.python-version }}     
-
-  coveralls_finish:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - name: Coveralls Finished
-      uses: AndreMiras/coveralls-python-action@develop
-      with:
-        parallel-finished: true
-
