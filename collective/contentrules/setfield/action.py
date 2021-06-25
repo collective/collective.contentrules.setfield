@@ -204,7 +204,7 @@ class SetFieldActionExecutor(object):
                           values={})
         try:
             script = cp.execute(cp_globals)
-        except Exception as e:
+        except Exception as e:  # noqa:B902
             self.error(self.obj, e)
             return False
 
@@ -258,7 +258,7 @@ class SetFieldActionExecutor(object):
             try:
                 dm.set(value)
                 item_updated = True
-            except Exception as e:
+            except Exception as e:  # noqa:B902
                 self.error(self.obj, "Error setting %s: %s" % (v_key, str(e)))
         if item_updated:
             # TODO: shouldn't it reindex just the indexes for
