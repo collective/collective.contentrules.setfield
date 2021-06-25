@@ -59,7 +59,7 @@ class SetFieldActionExecutor(object):
 
         try:
             objects = self.get_objects()
-        except Exception as e:
+        except Exception as e:  # noqa:B902
             self.error(self.obj, e)
             return False
 
@@ -87,7 +87,7 @@ class SetFieldActionExecutor(object):
                 if self.preserve_modification_date is True:
                     item.modification_date = old_date
                     item.reindexObject(idxs='modified')
-            except Exception as e:
+            except Exception as e:  # noqa:B902
                 self.error(self.obj, e)
                 return False
 
