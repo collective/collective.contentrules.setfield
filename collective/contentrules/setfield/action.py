@@ -67,7 +67,7 @@ class SetFieldActionExecutor(object):
 
         try:
             objects = self.get_objects()
-        except Exception as e:
+        except Exception as e:  # noqa:B902
             self.error(self.obj, e)
             return False
 

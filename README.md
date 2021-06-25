@@ -1,7 +1,8 @@
-![Build Status](https://travis-ci.org/collective/collective.contentrules.setfield.svg?branch=master "Build Status")
+# collective.contentrules.setfield
 
-Introduction
-============
+![Build status](https://github.com//collective/collective.contentrules.setfield/actions/workflows/main.yml/badge.svg)
+
+## Introduction
 
 This content rule lets you set the value of fields on a content object.
 
