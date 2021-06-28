@@ -19,3 +19,9 @@ Changelog
 
 - Add unit tests.
   [JeffersonBledsoe]
+
+- Ensure only dexterity fields can be set and values are valid or error thrown
+  [djay]
+
+- Fix bug where object with no workflow would prevent rule being fired
+  [djay]

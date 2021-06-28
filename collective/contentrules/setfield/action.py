@@ -9,13 +9,21 @@ from plone import api
 from plone.app.contentrules.browser.formhelper import AddForm, EditForm
 from plone.contentrules.engine.interfaces import IRuleStorage
 from plone.contentrules.rule.interfaces import IExecutable, IRuleElementData
+from plone.dexterity.interfaces import IDexterityContent
+from plone.dexterity.utils import iterSchemata
+from Products.ATContentTypes.interfaces import IATContentType
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone import utils
 from Products.statusmessages.interfaces import IStatusMessage
-from zope.component import adapts, getMultiAdapter, queryUtility
+from z3c.form.interfaces import IDataManager
+from zope.component import (adapts, getMultiAdapter, queryMultiAdapter,
+                            queryUtility)
+from zope.event import notify
 from zope.formlib import form
 from zope.i18n import translate
 from zope.interface import Interface, implements
+from zope.lifecycleevent import ObjectModifiedEvent
+from zope.schema.interfaces import ValidationError
 
 logger = getLogger('collective.contentrules.setfield')
 
@@ -79,17 +87,14 @@ class SetFieldActionExecutor(object):
                                    % item)
                     continue
 
-            try:
-                old_date = None
-                if self.preserve_modification_date is True:
-                    old_date = item.modification_date
-                self.process_script(item)
-                if self.preserve_modification_date is True:
-                    item.modification_date = old_date
-                    item.reindexObject(idxs='modified')
-            except Exception as e:  # noqa:B902
-                self.error(self.obj, e)
-                return False
+            old_date = None
+            if self.preserve_modification_date is True:
+                old_date = item.modification_date
+            result = self.process_script(item)
+            if self.preserve_modification_date is True:
+                item.modification_date = old_date
+                item.reindexObject(idxs='modified')
+            return result
 
         # If there are < 5 warnings, display them as messages. Otherwise we
         # set a more generic message & point the user to the zope logs.
@@ -182,7 +187,9 @@ class SetFieldActionExecutor(object):
         cur_wf = wft.getWorkflowsFor(item)
         if len(cur_wf) > 0:
             cur_wf = cur_wf[0].id
-            state = wft.getStatusOf(cur_wf, item)['review_state']
+            state = wft.getStatusOf(cur_wf, item)
+            if state is not None:
+                state = state['review_state']
 
         history = getattr(item, 'workflow_history', {})
         if len(history):
@@ -195,16 +202,89 @@ class SetFieldActionExecutor(object):
                           history=history,
                           event=self.event,
                           values={})
-        script = cp.execute(cp_globals)
+        try:
+            script = cp.execute(cp_globals)
+        except Exception as e:  # noqa:B902
+            self.error(self.obj, e)
+            return False
+
+        fields = self._get_fields(item)
         item_updated = False
         for v_key, value in script['values'].iteritems():
-            if value is None and getattr(item, v_key, None) is None:
+            # if value is None and getattr(item, v_key, None) is None:
+            #     continue
+            # if item.get(item, v_key, None) == value:
+            #     continue
+
+            # TODO: should validate against the content type otherwise
+            #   this is a security problem
+            if v_key not in fields:
+                self.error(self.obj, "Field '%s' not found so not set" % v_key)
                 continue
-            if getattr(item, v_key) != value:
-                setattr(item, v_key, value)
+
+            schema, field = fields[v_key]
+
+            # Handle item being an Archetypes content
+            if IATContentType.providedBy(item):
+                existing_value = field.getRaw(item)
+                if existing_value == value:
+                    continue
+                error = field.validate(value, item)
+                if error:
+                    self.error(self.obj, str(error))
+                    continue
+                field.set(item, value)
                 item_updated = True
+                continue
+
+            dm = queryMultiAdapter((item, field), IDataManager)
+            # Handles case where old value is not set and new value is None
+            if dm.get() == value:
+                continue
+            if dm is None or not dm.canWrite():
+                self.error(self.obj, "Not able to write %s" % v_key)
+                continue
+            # TODO: Could also check permission to write however should
+            #   be checked against owner for content rule not current user.
+            #   Owner is not kept
+
+            bound = field.bind(self.context)
+            try:
+                bound.validate(value)
+            except ValidationError as e:
+                self.error(self.obj, str(e))
+                continue
+
+            try:
+                dm.set(value)
+                item_updated = True
+            except Exception as e:  # noqa:B902
+                self.error(self.obj, "Error setting %s: %s" % (v_key, str(e)))
         if item_updated:
+            # TODO: shouldn't it reindex just the indexes for
+            #   whats changed (and SearchableText)?
+            # TODO: I think this is done in the handler below anyway
             item.reindexObject()
+            notify(ObjectModifiedEvent(item))
+        return True
+
+    def _get_fields(self, context):
+        fields = {}
+
+        if IATContentType.providedBy(context):
+            context_schema = context.Schema()
+            for field in context_schema.fields():
+                fields[field.getName()] = (context_schema, field)
+        elif IDexterityContent.providedBy(context):
+            # main schema should override behaviours
+            for schema in reversed(list(iterSchemata(context))):
+                from zope.schema import getFieldsInOrder
+                for fieldid, field in getFieldsInOrder(schema):
+                    fields[fieldid] = (schema, field)
+        else:
+            raise Exception("Unknown content type for context at %s" % context.absolute_url())  # noqa:E501
+
+        return fields
 
 
 class SetFieldAddForm(AddForm):
