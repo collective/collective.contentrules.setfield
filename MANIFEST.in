@@ -1,3 +1,5 @@
-include *.md
+include *.md requirements.txt LICENSE MANIFEST.in
+exclude buildout.cfg
 recursive-include collective *
 recursive-exclude src *.pyc *.pyo
+global-exclude *.py[co]
