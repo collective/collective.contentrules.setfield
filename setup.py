@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.9a.dev0'
+version = '0.9.0.dev0'
 
 setup(name='collective.contentrules.setfield',
       version=version,
