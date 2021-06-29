@@ -1,0 +1,64 @@
+name: Deploy (Test)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "'patch', 'minor' or 'major' version bump"
+        required: true
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    environment: Test PyPI
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "2.7"
+      - name: "Update pypirc"
+        env:
+          PYPI_ACCESS_TOKEN: ${{ secrets.PYPI_ACCESS_TOKEN }}
+        run: |
+          echo -e "[pypi]" >> ~/.pypirc
+          echo -e "username = __token__" >> ~/.pypirc
+          echo -e "password = $PYPI_ACCESS_TOKEN" >> ~/.pypirc
+          cat ~/.pypirc
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y libxml2-dev libxslt-dev python-dev
+          pip install virtualenv wheel
+          pip install -r requirements.txt
+          buildout -Nc buildout.cfg
+
+      - name: "Help ME"
+        run: git status
+
+      - name: Bump version (PATCH)
+        if: github.event.inputs.version == "patch"
+        run: bin/bumpversion --no-input
+      - name: Bump version (MINOR)
+        if: github.event.inputs.version == "minor"
+        run: bin/bumpversion --feature --no-input
+      - name: Bump version (MAJOR)
+        if: github.event.inputs.version == "major"
+        run: bin/bumpversion --breaking --no-input
+      - name: Incorrect version bump
+        if: github.event.inputs.version != "patch" ||
+          github.event.inputs.version != "minor" ||
+          github.event.inputs.version != "major"
+        run: echo "::error The version bump argument was not valid. Value should be 'patch', 'minor' or 'major'." && exit 1
+
+      - name: Pre-release
+        run: |
+          ./bin/prerelease --no-input
+
+      - name: Release
+        run: |
+          ./bin/release --no-input
+
+      - name: Post-release
+        run: |
+          ./bin/postrelease --no-input
