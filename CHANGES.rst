@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.9a (unreleased)
+0.9.0 (unreleased)
 -----------------
 
 - Initial release.

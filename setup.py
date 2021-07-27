@@ -6,8 +6,9 @@ version = '0.9.0.dev0'
 setup(name='collective.contentrules.setfield',
       version=version,
       description="A content rule for setting the value of a field on an object",
-      long_description=open("README.md").read() + "\n" +
-      open("CHANGES.md").read(),
+      long_description=open("README.rst").read()
+      + "\n"
+      + open("CHANGES.rst").read(),
       # Get more strings from
       # http://pypi.python.org/pypi?:action=list_classifiers
       classifiers=[
