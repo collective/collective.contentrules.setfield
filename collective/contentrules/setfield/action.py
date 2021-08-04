@@ -94,7 +94,6 @@ class SetFieldActionExecutor(object):
             if self.preserve_modification_date is True:
                 item.modification_date = old_date
                 item.reindexObject(idxs='modified')
-            return result
 
         # If there are < 5 warnings, display them as messages. Otherwise we
         # set a more generic message & point the user to the zope logs.
