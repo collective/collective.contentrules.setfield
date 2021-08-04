@@ -205,7 +205,7 @@ class SetFieldActionExecutor(object):
         try:
             script = cp.execute(cp_globals)
         except Exception as e:  # noqa:B902
-            self.error(self.obj, e)
+            self.error(item, e)
             return False
 
         fields = self._get_fields(item)
@@ -219,7 +219,7 @@ class SetFieldActionExecutor(object):
             # TODO: should validate against the content type otherwise
             #   this is a security problem
             if v_key not in fields:
-                self.error(self.obj, "Field '%s' not found so not set" % v_key)
+                self.error(item, "Field '%s' not found so not set" % v_key)
                 continue
 
             schema, field = fields[v_key]
@@ -231,7 +231,7 @@ class SetFieldActionExecutor(object):
                     continue
                 error = field.validate(value, item)
                 if error:
-                    self.error(self.obj, str(error))
+                    self.error(item, str(error))
                     continue
                 field.set(item, value)
                 item_updated = True
@@ -242,7 +242,7 @@ class SetFieldActionExecutor(object):
             if dm.get() == value:
                 continue
             if dm is None or not dm.canWrite():
-                self.error(self.obj, "Not able to write %s" % v_key)
+                self.error(item, "Not able to write %s" % v_key)
                 continue
             # TODO: Could also check permission to write however should
             #   be checked against owner for content rule not current user.
@@ -252,14 +252,14 @@ class SetFieldActionExecutor(object):
             try:
                 bound.validate(value)
             except ValidationError as e:
-                self.error(self.obj, str(e))
+                self.error(item, str(e))
                 continue
 
             try:
                 dm.set(value)
                 item_updated = True
             except Exception as e:  # noqa:B902
-                self.error(self.obj, "Error setting %s: %s" % (v_key, str(e)))
+                self.error(item, "Error setting %s: %s" % (v_key, str(e)))
         if item_updated:
             # TODO: shouldn't it reindex just the indexes for
             #   whats changed (and SearchableText)?
