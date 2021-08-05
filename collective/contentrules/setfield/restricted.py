@@ -32,5 +32,5 @@ class PyScript(object):
         my_globals["_getattr_"] = ZopeGuards.guarded_getattr
         if locals is None:
             locals = {}
-        exec(self.code in my_globals, locals)
+        exec(self.code, my_globals, locals)
         return locals
