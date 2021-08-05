@@ -7,7 +7,7 @@
 *.egg-info
 *.EGG-INFO
 *.DS_Store
-.*.cfg
+.installed.cfg
 .idea
 bin/
 build/
