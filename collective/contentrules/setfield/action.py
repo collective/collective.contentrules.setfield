@@ -113,11 +113,11 @@ class SetFieldActionExecutor(object):
 
     def error(self, obj_being_processed, error):
         title = utils.pretty_title_or_id(
-            obj_being_processed, obj_being_processed
+            obj_being_processed, obj_being_processed,
         )
         message = _(
             u"Unable to set values on %s: %s, %s"
-            % (title, str(type(error)), error)
+            % (title, str(type(error)), error),
         )
         logger.error(message)
         if self.request is not None:
