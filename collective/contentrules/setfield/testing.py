@@ -1,6 +1,10 @@
 from plone import api
-from plone.app.testing import (FunctionalTesting, IntegrationTesting,
-                               PLONE_FIXTURE, PloneSandboxLayer)
+from plone.app.testing import (
+    FunctionalTesting,
+    IntegrationTesting,
+    PLONE_FIXTURE,
+    PloneSandboxLayer,
+)
 
 
 class SetFieldLayer(PloneSandboxLayer):

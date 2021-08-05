@@ -7,8 +7,8 @@ from zope.interface import implements
 
 
 def modified(event):
-    """ When an object is modified, fire the ParentModifiedEvent for its
-        direct descendents.
+    """When an object is modified, fire the ParentModifiedEvent for its
+    direct descendents.
     """
     obj = event.object
     if not (

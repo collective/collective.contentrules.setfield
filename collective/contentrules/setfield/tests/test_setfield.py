@@ -33,7 +33,7 @@ class SetFieldAction(unittest.TestCase):
 
     def assertNoError(self):
         msgs = IStatusMessage(self.portal.REQUEST).show()
-        self.assertEqual([], [(m.type, m.message) for m in msgs if m.type!='info'])
+        self.assertEqual([], [(m.type, m.message) for m in msgs if m.type != "info"])
 
     def test_trigger_script_on_object_modified(self):
         document = self.document
@@ -61,18 +61,14 @@ class SetFieldAction(unittest.TestCase):
         title_after_parent_modified = document.title
         self.assertEqual(document.title, "Title set by SetField")
 
-        self.assertNotEqual(
-            title_before_parent_modified, title_after_parent_modified
-        )
+        self.assertNotEqual(title_before_parent_modified, title_after_parent_modified)
 
     def test_preserve_modification_date(self):
         document = self.date_preserving_document
 
         title_before_action = document.title
         self.assertEqual(document.title, "date_preserving_document")
-        modification_date_before_action = (
-            document.modification_date.asdatetime()
-        )
+        modification_date_before_action = document.modification_date.asdatetime()
 
         notify(ObjectModifiedEvent(document))
         self.assertNoError()
