@@ -1,12 +1,12 @@
-import unittest
-
 from collective.contentrules.setfield.handlers import ParentModifiedEvent
 from collective.contentrules.setfield.testing import INTEGRATION_TESTING
 from plone import api
-from plone.app.testing import TEST_USER_ID, setRoles
+from plone.app.testing import setRoles, TEST_USER_ID
+from Products.statusmessages.interfaces import IStatusMessage
 from zope.event import notify
 from zope.lifecycleevent import ObjectModifiedEvent
-from Products.statusmessages.interfaces import IStatusMessage
+
+import unittest
 
 
 class SetFieldAction(unittest.TestCase):

@@ -1,9 +1,10 @@
+from AccessControl import allow_type, ModuleSecurityInfo
+from RestrictedPython import compile_restricted
+
+import AccessControl.ZopeGuards as ZopeGuards
 import datetime
 import re
 
-import AccessControl.ZopeGuards as ZopeGuards
-from AccessControl import ModuleSecurityInfo, allow_type
-from RestrictedPython import compile_restricted
 
 # Make useful modules visible
 for name in ('datetime', 'time', 're'):

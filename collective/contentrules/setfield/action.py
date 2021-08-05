@@ -1,9 +1,8 @@
 # -*- coding:utf-8 -*-
-from logging import getLogger
-
 from collective.contentrules.setfield import SetFieldMessageFactory as _
 from collective.contentrules.setfield.interfaces import ISetFieldAction
 from collective.contentrules.setfield.restricted import PyScript
+from logging import getLogger
 from OFS.SimpleItem import SimpleItem
 from plone import api
 from plone.app.contentrules.browser.formhelper import AddForm, EditForm
@@ -21,9 +20,10 @@ from zope.component import (adapts, getMultiAdapter, queryMultiAdapter,
 from zope.event import notify
 from zope.formlib import form
 from zope.i18n import translate
-from zope.interface import Interface, implements
+from zope.interface import implements, Interface
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.schema.interfaces import ValidationError
+
 
 logger = getLogger('collective.contentrules.setfield')
 
