@@ -90,7 +90,7 @@ class SetFieldActionExecutor(object):
             old_date = None
             if self.preserve_modification_date is True:
                 old_date = item.modification_date
-            result = self.process_script(item)
+            self.process_script(item)
             if self.preserve_modification_date is True:
                 item.modification_date = old_date
                 item.reindexObject(idxs='modified')
