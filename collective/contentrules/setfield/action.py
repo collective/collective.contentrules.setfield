@@ -13,7 +13,7 @@ from plone.dexterity.interfaces import IDexterityContent
 from plone.dexterity.utils import iterSchemata
 from Products.ATContentTypes.interfaces import IATContentType
 from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone import utils
+from Products.CMFPlone.utils import pretty_title_or_id
 from Products.statusmessages.interfaces import IStatusMessage
 from z3c.form.interfaces import IDataManager
 from zope.component import (adapts, getMultiAdapter, queryMultiAdapter,
@@ -112,7 +112,7 @@ class SetFieldActionExecutor(object):
         return True
 
     def error(self, obj_being_processed, error):
-        title = utils.pretty_title_or_id(
+        title = pretty_title_or_id(
             obj_being_processed, obj_being_processed,
         )
         message = _(
