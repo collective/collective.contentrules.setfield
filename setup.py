@@ -3,17 +3,18 @@ from setuptools import find_packages, setup
 import os
 
 
-version = '0.9.1.dev0'
+version = "0.9.1.dev0"
 
-setup(name='collective.contentrules.setfield',
-      version=version,
-      description="A content rule for setting the value of a field on an object",
-      long_description=open("README.rst").read()
-      + "\n"
-      + open("CHANGES.rst").read(),
-      # Get more strings from
-      # http://pypi.python.org/pypi?:action=list_classifiers
-      classifiers=[
+setup(
+    name="collective.contentrules.setfield",
+    version=version,
+    description="A content rule for setting the value of a field on an object",
+    long_description=open("README.rst").read()
+    + "\n"
+    + open("CHANGES.rst").read(),
+    # Get more strings from
+    # http://pypi.python.org/pypi?:action=list_classifiers
+    classifiers=[
         "Development Status :: 3 - Alpha",
         "Environment :: Web Environment",
         "Framework :: Plone",
@@ -30,31 +31,24 @@ setup(name='collective.contentrules.setfield',
         "Programming Language :: Python :: 2.7",
         "Topic :: Internet",
         "Topic :: Software Development :: Libraries :: Python Modules",
-        ],
-      keywords='web zope plone contentrules',
-      author='Jon Pentland',
-      author_email='jon.pentland@pretagov.co.uk',
-      url='https://github.com/collective/collective.contentrules.setfield',
-      license='GPL Version 2',
-      packages=find_packages(exclude=['ez_setup']),
-      namespace_packages=['collective', 'collective.contentrules'],
-      include_package_data=True,
-      zip_safe=False,
-      install_requires=[
-          'setuptools',
-          'plone.app.contentrules',
-          'zope.formlib'
-      ],
-      extras_require={
-          'test': [
-              'plone.app.testing',
-              'plone.api'
-          ],
-      },
-      entry_points="""
+    ],
+    keywords="web zope plone contentrules",
+    author="Jon Pentland",
+    author_email="jon.pentland@pretagov.co.uk",
+    url="https://github.com/collective/collective.contentrules.setfield",
+    license="GPL Version 2",
+    packages=find_packages(exclude=["ez_setup"]),
+    namespace_packages=["collective", "collective.contentrules"],
+    include_package_data=True,
+    zip_safe=False,
+    install_requires=["setuptools", "plone.app.contentrules", "zope.formlib"],
+    extras_require={
+        "test": ["plone.app.testing", "plone.api"],
+    },
+    entry_points="""
       # -*- Entry points: -*-
 
       [z3c.autoinclude.plugin]
       target = plone
       """,
-      )
+)
