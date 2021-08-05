@@ -4,7 +4,7 @@ Changelog
 0.9.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fixed running setfield when using the `update_all` option instead of the object that triggered the content rule #27 [JeffersonBledsoe]
 
 
 0.9.0 (2021-07-27)
