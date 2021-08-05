@@ -26,6 +26,7 @@ from zope.formlib import form
 from zope.i18n import translate
 from zope.interface import implements, Interface
 from zope.lifecycleevent import ObjectModifiedEvent
+from zope.schema import getFieldsInOrder
 from zope.schema.interfaces import ValidationError
 
 
@@ -295,8 +296,6 @@ class SetFieldActionExecutor(object):
         elif IDexterityContent.providedBy(context):
             # main schema should override behaviours
             for schema in reversed(list(iterSchemata(context))):
-                from zope.schema import getFieldsInOrder
-
                 for fieldid, field in getFieldsInOrder(schema):
                     fields[fieldid] = (schema, field)
         else:
