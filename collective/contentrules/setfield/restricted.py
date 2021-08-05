@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from AccessControl import allow_type, ModuleSecurityInfo
 from RestrictedPython import compile_restricted
 

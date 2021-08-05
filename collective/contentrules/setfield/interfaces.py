@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from collective.contentrules.setfield import SetFieldMessageFactory as _
 from plone.supermodel import model
 from zope import schema

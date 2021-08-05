@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from collective.contentrules.setfield.interfaces import IParentModifiedEvent
 from plone.app.discussion.interfaces import IComment
 from Products.CMFCore.interfaces import IContentish, IFolderish
