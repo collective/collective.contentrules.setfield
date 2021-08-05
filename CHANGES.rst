@@ -4,7 +4,7 @@ Changelog
 0.9.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Added black, isort and flake8 #28 [JeffersonBledsoe]
 
 
 0.9.0 (2021-07-27)
