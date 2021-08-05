@@ -112,14 +112,16 @@ class SetFieldActionExecutor(object):
         return True
 
     def error(self, obj_being_processed, error):
-        title = utils.pretty_title_or_id(obj_being_processed, obj_being_processed)
-        message = _(u"Unable to set values on %s: %s, %s" % (title,
-                                                             str(type(error)),
-                                                             error))
+        title = utils.pretty_title_or_id(
+            obj_being_processed, obj_being_processed
+        )
+        message = _(
+            u"Unable to set values on %s: %s, %s"
+            % (title, str(type(error)), error)
+        )
         logger.error(message)
         if self.request is not None:
-            IStatusMessage(self.request).addStatusMessage(message,
-                                                          type="error")
+            IStatusMessage(self.request).addStatusMessage(message, type="error")
 
     def warn(self, url, warning):
         message = _(u"Unable to update %s - %s: %s" % (url,
