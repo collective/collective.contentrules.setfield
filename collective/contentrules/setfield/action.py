@@ -122,7 +122,8 @@ class SetFieldActionExecutor(object):
 
     def error(self, obj_being_processed, error):
         title = pretty_title_or_id(
-            obj_being_processed, obj_being_processed,
+            obj_being_processed,
+            obj_being_processed,
         )
         message = _(
             u"Unable to set values on %s: %s, %s"
