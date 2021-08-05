@@ -15,7 +15,12 @@ from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone import utils
 from Products.statusmessages.interfaces import IStatusMessage
 from z3c.form.interfaces import IDataManager
-from zope.component import adapts, getMultiAdapter, queryMultiAdapter, queryUtility
+from zope.component import (
+    adapts,
+    getMultiAdapter,
+    queryMultiAdapter,
+    queryUtility,
+)
 from zope.event import notify
 from zope.formlib import form
 from zope.i18n import translate
@@ -100,7 +105,9 @@ class SetFieldActionExecutor(object):
         if self.request is not None and len(self.warnings) > 0:
             if len(self.warnings) < 6:
                 for warning in self.warnings:
-                    IStatusMessage(self.request).addStatusMessage(warning, type="warn")
+                    IStatusMessage(self.request).addStatusMessage(
+                        warning, type="warn"
+                    )
             else:
                 IStatusMessage(self.request).addStatusMessage(
                     _(
@@ -115,7 +122,8 @@ class SetFieldActionExecutor(object):
     def error(self, obj, error):
         title = utils.pretty_title_or_id(obj, obj)
         message = _(
-            u"Unable to set values on %s: %s, %s" % (title, str(type(error)), error)
+            u"Unable to set values on %s: %s, %s"
+            % (title, str(type(error)), error)
         )
         logger.error(message)
         if self.request is not None:
@@ -156,7 +164,9 @@ class SetFieldActionExecutor(object):
                     for name in condition.check_types:
                         fti = getattr(portal_types, name, None)
                         if fti is not None:
-                            title = translate(fti.Title(), context=self.portal.REQUEST)
+                            title = translate(
+                                fti.Title(), context=self.portal.REQUEST
+                            )
                             titles.append(title)
                     query["Type"] = titles
                 # TODO: file extension
@@ -190,7 +200,9 @@ class SetFieldActionExecutor(object):
 
         history = getattr(item, "workflow_history", {})
         if len(history):
-            history = {i: item.workflow_history[i] for i in item.workflow_history}
+            history = {
+                i: item.workflow_history[i] for i in item.workflow_history
+            }
         cp = PyScript(self.value_script)
         cp_globals = dict(
             context=item,
@@ -282,7 +294,8 @@ class SetFieldActionExecutor(object):
                     fields[fieldid] = (schema, field)
         else:
             raise Exception(
-                "Unknown content type for context at %s" % context.absolute_url()
+                "Unknown content type for context at %s"
+                % context.absolute_url()
             )  # noqa:E501
 
         return fields

@@ -10,7 +10,9 @@ items = [
     ("object", u"Just the object"),
     ("all", u"All matching objects"),
 ]
-terms = [SimpleTerm(value=pair[0], token=pair[0], title=pair[1]) for pair in items]
+terms = [
+    SimpleTerm(value=pair[0], token=pair[0], title=pair[1]) for pair in items
+]
 
 
 class ISetFieldAction(model.Schema):
