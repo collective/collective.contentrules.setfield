@@ -88,7 +88,9 @@ class SetFieldActionExecutor(object):
                         passing = False
                         break
                 if passing is False:
-                    logger.warning("Not executing setField action on %s" % item)
+                    logger.warning(
+                        "Not executing setField action on %s" % item
+                    )  # noqa: E501
                     continue
 
             old_date = None
@@ -111,7 +113,7 @@ class SetFieldActionExecutor(object):
             else:
                 IStatusMessage(self.request).addStatusMessage(
                     _(
-                        u"%i objects could not be updated. Please see the debug"
+                        u"%i objects could not be updated. Please see the debug"  # noqa: E501
                         u"logs for more information." % len(self.warnings)
                     ),
                     type="warn",
@@ -127,11 +129,14 @@ class SetFieldActionExecutor(object):
         )
         logger.error(message)
         if self.request is not None:
-            IStatusMessage(self.request).addStatusMessage(message, type="error")
+            IStatusMessage(self.request).addStatusMessage(
+                message, type="error"
+            )  # noqa: E501
 
     def warn(self, url, warning):
         message = _(
-            u"Unable to update %s - %s: %s" % (url, str(type(warning)), warning)
+            u"Unable to update %s - %s: %s"
+            % (url, str(type(warning)), warning)  # noqa: E501
         )
         logger.warn(message)
         self.warnings.append(message)
@@ -306,7 +311,9 @@ class SetFieldAddForm(AddForm):
 
     form_fields = form.FormFields(ISetFieldAction)
     label = _(u"Add a Set Field Value Action")
-    description = _(u"An action for setting the value of a field on an object.")
+    description = _(
+        u"An action for setting the value of a field on an object."
+    )  # noqa: E501
     schema = ISetFieldAction
 
     def create(self, data):
@@ -320,5 +327,7 @@ class SetFieldEditForm(EditForm):
 
     form_fields = form.FormFields(ISetFieldAction)
     label = _(u"Edit a Set Field Action")
-    description = _(u"An action for setting the value of a field on an object.")
+    description = _(
+        u"An action for setting the value of a field on an object."
+    )  # noqa: E501
     schema = ISetFieldAction
