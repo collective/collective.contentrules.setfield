@@ -5,6 +5,7 @@ Changelog
 ------------------
 
 - Fixed running setfield when using the `update_all` option instead of the object that triggered the content rule #27 [JeffersonBledsoe]
+- Added black, isort and flake8 #28 [JeffersonBledsoe]
 
 
 0.9.0 (2021-07-27)

@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from collective.contentrules.setfield.interfaces import IParentModifiedEvent
 from plone.app.discussion.interfaces import IComment
 from Products.CMFCore.interfaces import IContentish, IFolderish
@@ -7,8 +8,8 @@ from zope.interface import implements
 
 
 def modified(event):
-    """ When an object is modified, fire the ParentModifiedEvent for its
-        direct descendents.
+    """When an object is modified, fire the ParentModifiedEvent for its
+    direct descendents.
     """
     obj = event.object
     if not (

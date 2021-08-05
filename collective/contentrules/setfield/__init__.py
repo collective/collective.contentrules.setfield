@@ -1,7 +1,8 @@
+# -*- coding:utf-8 -*-
 from zope.i18nmessageid import MessageFactory
 
-SetFieldMessageFactory = \
-    MessageFactory('collective.contentrules.setfield')
+
+SetFieldMessageFactory = MessageFactory("collective.contentrules.setfield")
 
 
 def initialize(context):
