@@ -1,12 +1,12 @@
-import unittest
-
 from collective.contentrules.setfield.handlers import ParentModifiedEvent
 from collective.contentrules.setfield.testing import INTEGRATION_TESTING
 from plone import api
-from plone.app.testing import TEST_USER_ID, setRoles
+from plone.app.testing import setRoles, TEST_USER_ID
+from Products.statusmessages.interfaces import IStatusMessage
 from zope.event import notify
 from zope.lifecycleevent import ObjectModifiedEvent
-from Products.statusmessages.interfaces import IStatusMessage
+
+import unittest
 
 
 class SetFieldAction(unittest.TestCase):
@@ -33,7 +33,9 @@ class SetFieldAction(unittest.TestCase):
 
     def assertNoError(self):
         msgs = IStatusMessage(self.portal.REQUEST).show()
-        self.assertEqual([], [(m.type, m.message) for m in msgs if m.type!='info'])
+        self.assertEqual(
+            [], [(m.type, m.message) for m in msgs if m.type != "info"]
+        )
 
     def test_trigger_script_on_object_modified(self):
         document = self.document

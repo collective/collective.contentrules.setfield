@@ -1,6 +1,6 @@
-include requirements.txt LICENSE MANIFEST.in
+include requirements.txt LICENSE MANIFEST.in pyproject.toml
 include README.rst CHANGES.rst CONTRIBUTORS.rst
 exclude buildout.cfg
 recursive-include collective *
-recursive-exclude src *.pyc *.pyo
+recursive-exclude src *.py[co]
 global-exclude *.py[co]

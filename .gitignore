@@ -7,7 +7,7 @@
 *.egg-info
 *.EGG-INFO
 *.DS_Store
-.*.cfg
+.installed.cfg
 .idea
 bin/
 build/
@@ -15,6 +15,8 @@ develop-eggs/
 downloads/
 eggs/
 fake-eggs/
+include/
+lib/
 parts/
 dist/
 var/
