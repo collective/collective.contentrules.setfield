@@ -4,7 +4,7 @@ Changelog
 0.9.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Added support for Plone5.2 using Python 2.7, Python 3.6, Python 3.7 and Python 3.8 #26 [JeffersonBledsoe]
 
 
 0.9.1 (2021-08-05)
