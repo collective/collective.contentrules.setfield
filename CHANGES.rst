@@ -4,7 +4,7 @@ Changelog
 0.9.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Changed to use the Plone API where recommended #31 [JeffersonBledsoe]
 
 
 0.9.1 (2021-08-05)
