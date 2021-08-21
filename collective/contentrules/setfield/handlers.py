@@ -32,4 +32,3 @@ def modified(event):
 @implementer(IParentModifiedEvent)
 class ParentModifiedEvent(ObjectEvent):
     """An object has been created"""
-
