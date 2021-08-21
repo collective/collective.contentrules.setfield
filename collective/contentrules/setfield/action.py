@@ -22,7 +22,7 @@ from zope.component import (
 from zope.event import notify
 from zope.formlib import form
 from zope.i18n import translate
-from zope.interface import implements, Interface
+from zope.interface import implementer, Interface
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.schema import getFieldsInOrder
 from zope.schema.interfaces import ValidationError
@@ -31,10 +31,10 @@ from zope.schema.interfaces import ValidationError
 logger = getLogger("collective.contentrules.setfield")
 
 
+@implementer(ISetFieldAction, IRuleElementData)
 class SetFieldAction(SimpleItem):
     """The actual persistent implementation of the action element."""
 
-    implements(ISetFieldAction, IRuleElementData)
     value_script = None
     update_all = None
     preserve_modification_date = None
@@ -45,10 +45,10 @@ class SetFieldAction(SimpleItem):
         return _(u"Set field values")
 
 
+@implementer(IExecutable)
 class SetFieldActionExecutor(object):
     """The executor for this action."""
 
-    implements(IExecutable)
     adapts(Interface, ISetFieldAction, Interface)
 
     def __init__(self, context, element, event):
