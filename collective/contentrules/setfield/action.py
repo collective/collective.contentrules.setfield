@@ -12,6 +12,7 @@ from plone.dexterity.utils import iterSchemata
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import pretty_title_or_id
 from Products.statusmessages.interfaces import IStatusMessage
+from six import iteritems
 from z3c.form.interfaces import IDataManager
 from zope.component import (
     adapts,
@@ -226,7 +227,7 @@ class SetFieldActionExecutor(object):
 
         fields = self._get_fields(item)
         item_updated = False
-        for v_key, value in script["values"].iteritems():
+        for (v_key, value) in iteritems(script["values"]):
             # if value is None and getattr(item, v_key, None) is None:
             #     continue
             # if item.get(item, v_key, None) == value:
