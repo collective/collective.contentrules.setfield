@@ -11,7 +11,6 @@ from plone.contentrules.rule.interfaces import IExecutable, IRuleElementData
 from plone.dexterity.interfaces import IDexterityContent
 from plone.dexterity.utils import iterSchemata
 from Products.ATContentTypes.interfaces import IATContentType
-from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import pretty_title_or_id
 from z3c.form.interfaces import IDataManager
 from zope.component import (
@@ -159,7 +158,7 @@ class SetFieldActionExecutor(object):
         if self.update_all and self.update_all == "all":
             # Build query based on rule conditions. Each resulting item has
             # its rule checked, so the search can return extra items.
-            portal_types = getToolByName(self.portal, "portal_types")
+            portal_types = api.portal.get_tool("portal_types")
             for condition in self.conditions:
                 # content type
                 if condition.element == "plone.conditions.PortalType":
