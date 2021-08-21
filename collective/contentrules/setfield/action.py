@@ -13,7 +13,6 @@ from plone.dexterity.utils import iterSchemata
 from Products.ATContentTypes.interfaces import IATContentType
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import pretty_title_or_id
-from Products.statusmessages.interfaces import IStatusMessage
 from z3c.form.interfaces import IDataManager
 from zope.component import (
     adapts,
@@ -107,11 +106,9 @@ class SetFieldActionExecutor(object):
         if self.request is not None and len(self.warnings) > 0:
             if len(self.warnings) < 6:
                 for warning in self.warnings:
-                    IStatusMessage(self.request).addStatusMessage(
-                        warning, type="warn"
-                    )
+                    api.portal.show_message(warning, type="warn")
             else:
-                IStatusMessage(self.request).addStatusMessage(
+                api.portal.show_message(
                     _(
                         u"%i objects could not be updated. Please see the debug"  # noqa: E501
                         u"logs for more information." % len(self.warnings)
@@ -132,9 +129,7 @@ class SetFieldActionExecutor(object):
         )
         logger.error(message)
         if self.request is not None:
-            IStatusMessage(self.request).addStatusMessage(
-                message, type="error"
-            )  # noqa: E501
+            api.portal.show_message(message, type="error")
 
     def warn(self, url, warning):
         message = _(
