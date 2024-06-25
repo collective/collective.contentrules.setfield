@@ -43,7 +43,7 @@ setup(
     zip_safe=False,
     install_requires=["setuptools", "plone.app.contentrules", "zope.formlib"],
     extras_require={
-        "test": ["plone.app.testing", "plone.api"],
+        "test": ["plone.app.contenttypes", "plone.app.testing", "plone.api"],
     },
     entry_points="""
       # -*- Entry points: -*-

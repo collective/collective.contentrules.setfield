@@ -8,12 +8,11 @@ from plone import api
 from plone.app.contentrules.browser.formhelper import AddForm, EditForm
 from plone.contentrules.engine.interfaces import IRuleStorage
 from plone.contentrules.rule.interfaces import IExecutable, IRuleElementData
-from plone.dexterity.interfaces import IDexterityContent
 from plone.dexterity.utils import iterSchemata
-from Products.ATContentTypes.interfaces import IATContentType
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import pretty_title_or_id
 from Products.statusmessages.interfaces import IStatusMessage
+from six import iteritems
 from z3c.form.interfaces import IDataManager
 from zope.component import (
     adapts,
@@ -24,7 +23,7 @@ from zope.component import (
 from zope.event import notify
 from zope.formlib import form
 from zope.i18n import translate
-from zope.interface import implements, Interface
+from zope.interface import implementer, Interface
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.schema import getFieldsInOrder
 from zope.schema.interfaces import ValidationError
@@ -33,10 +32,10 @@ from zope.schema.interfaces import ValidationError
 logger = getLogger("collective.contentrules.setfield")
 
 
+@implementer(ISetFieldAction, IRuleElementData)
 class SetFieldAction(SimpleItem):
     """The actual persistent implementation of the action element."""
 
-    implements(ISetFieldAction, IRuleElementData)
     value_script = None
     update_all = None
     preserve_modification_date = None
@@ -47,10 +46,10 @@ class SetFieldAction(SimpleItem):
         return _(u"Set field values")
 
 
+@implementer(IExecutable)
 class SetFieldActionExecutor(object):
     """The executor for this action."""
 
-    implements(IExecutable)
     adapts(Interface, ISetFieldAction, Interface)
 
     def __init__(self, context, element, event):
@@ -228,7 +227,7 @@ class SetFieldActionExecutor(object):
 
         fields = self._get_fields(item)
         item_updated = False
-        for v_key, value in script["values"].iteritems():
+        for (v_key, value) in iteritems(script["values"]):
             # if value is None and getattr(item, v_key, None) is None:
             #     continue
             # if item.get(item, v_key, None) == value:
@@ -241,19 +240,6 @@ class SetFieldActionExecutor(object):
                 continue
 
             schema, field = fields[v_key]
-
-            # Handle item being an Archetypes content
-            if IATContentType.providedBy(item):
-                existing_value = field.getRaw(item)
-                if existing_value == value:
-                    continue
-                error = field.validate(value, item)
-                if error:
-                    self.error(item, str(error))
-                    continue
-                field.set(item, value)
-                item_updated = True
-                continue
 
             dm = queryMultiAdapter((item, field), IDataManager)
             # Handles case where old value is not set and new value is None
@@ -289,20 +275,9 @@ class SetFieldActionExecutor(object):
     def _get_fields(self, context):
         fields = {}
 
-        if IATContentType.providedBy(context):
-            context_schema = context.Schema()
-            for field in context_schema.fields():
-                fields[field.getName()] = (context_schema, field)
-        elif IDexterityContent.providedBy(context):
-            # main schema should override behaviours
-            for schema in reversed(list(iterSchemata(context))):
-                for fieldid, field in getFieldsInOrder(schema):
-                    fields[fieldid] = (schema, field)
-        else:
-            raise Exception(
-                "Unknown content type for context at %s"
-                % context.absolute_url()
-            )  # noqa:E501
+        for schema in reversed(list(iterSchemata(context))):
+            for fieldid, field in getFieldsInOrder(schema):
+                fields[fieldid] = (schema, field)
 
         return fields
 

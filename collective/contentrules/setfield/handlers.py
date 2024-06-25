@@ -2,9 +2,9 @@
 from collective.contentrules.setfield.interfaces import IParentModifiedEvent
 from plone.app.discussion.interfaces import IComment
 from Products.CMFCore.interfaces import IContentish, IFolderish
-from zope.component.interfaces import ObjectEvent
+from zope.interface.interfaces import ObjectEvent
 from zope.event import notify
-from zope.interface import implements
+from zope.interface import implementer
 
 
 def modified(event):
@@ -29,7 +29,6 @@ def modified(event):
         notify(ParentModifiedEvent(child.getObject()))
 
 
+@implementer(IParentModifiedEvent)
 class ParentModifiedEvent(ObjectEvent):
     """An object has been created"""
-
-    implements(IParentModifiedEvent)

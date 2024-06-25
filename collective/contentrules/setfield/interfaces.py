@@ -2,7 +2,7 @@
 from collective.contentrules.setfield import SetFieldMessageFactory as _
 from plone.supermodel import model
 from zope import schema
-from zope.component.interfaces import IObjectEvent
+from zope.interface.interfaces import IObjectEvent
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 

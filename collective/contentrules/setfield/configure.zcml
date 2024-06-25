@@ -38,7 +38,7 @@
         title="Set Field Values"
         description="Set the values of fields on the object"
         for="*"
-        event="zope.component.interfaces.IObjectEvent"
+        event="zope.interface.interfaces.IObjectEvent"
         addview="collective.contentrules.setfield.ApplySetField"
         editview="edit"
         schema=".interfaces.ISetFieldAction"
