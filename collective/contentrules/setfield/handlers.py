@@ -5,6 +5,8 @@ from Products.CMFCore.interfaces import IContentish, IFolderish
 from zope.interface.interfaces import ObjectEvent
 from zope.event import notify
 from zope.interface import implementer
+from plone import api
+from Products.CMFPlone.utils import get_installer
 
 
 def modified(event):
@@ -12,6 +14,12 @@ def modified(event):
     direct descendents.
     """
     obj = event.object
+    portal = api.portal.get()
+    installer = get_installer(portal)
+    installed = installer.is_product_installed('collective.contentrules.setfield')
+    if not installed:
+        return
+
     if not (
         IContentish.providedBy(obj)
         or IComment.providedBy(obj)
