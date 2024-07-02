@@ -7,14 +7,19 @@ from zope.event import notify
 from zope.interface import implementer
 from plone import api
 from Products.CMFPlone.utils import get_installer
-
+from plone.api.exc import CannotGetPortalError
 
 def modified(event):
     """When an object is modified, fire the ParentModifiedEvent for its
     direct descendents.
     """
     obj = event.object
-    portal = api.portal.get()
+    try:
+        portal = api.portal.get()
+    except CannotGetPortalError:
+        # If we can't get the portal object, we can't check if we're installed.
+        # This can happen for example when operating on the root from the zmi.
+        return
     installer = get_installer(portal)
     installed = installer.is_product_installed('collective.contentrules.setfield')
     if not installed:
