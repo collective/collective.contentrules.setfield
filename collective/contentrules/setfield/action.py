@@ -233,6 +233,14 @@ class SetFieldActionExecutor(object):
             # if item.get(item, v_key, None) == value:
             #     continue
 
+            # Support renaming objects by checking for the 'id' key
+            if v_key == 'id':
+                try:
+                    api.content.rename(obj=item, new_id=value, safe_id=True)
+                except Exception as e:
+                    self.error(item, str(e))
+                    continue
+                
             # TODO: should validate against the content type otherwise
             #   this is a security problem
             if v_key not in fields:

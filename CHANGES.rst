@@ -5,6 +5,7 @@ Changelog
 ------------------
 
 - Added support for Plone5.2 using Python 2.7, Python 3.6, Python 3.7 and Python 3.8 #26 [JeffersonBledsoe]
+- Add support for renaming content in scripts [instification]
 
 
 0.9.1 (2021-08-05)
