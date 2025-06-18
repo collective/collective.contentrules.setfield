@@ -17,6 +17,7 @@ from z3c.form.interfaces import IDataManager
 from zope.component import (
     adapts,
     getMultiAdapter,
+    getUtility,
     queryMultiAdapter,
     queryUtility,
 )
@@ -27,6 +28,7 @@ from zope.interface import implementer, Interface
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.schema import getFieldsInOrder
 from zope.schema.interfaces import ValidationError
+from zope.schema.interfaces import IVocabularyFactory
 
 
 logger = getLogger("collective.contentrules.setfield")
@@ -66,6 +68,7 @@ class SetFieldActionExecutor(object):
         self.preserve_modification_date = getattr(
             self.element, "preserve_modification_date", False
         )
+        self.vocabularies = getattr(self.element, "vocabularies", "")
         self.conditions = self.get_conditions()
         self.portal = api.portal.get()
 
@@ -210,12 +213,22 @@ class SetFieldActionExecutor(object):
             history = {
                 i: item.workflow_history[i] for i in item.workflow_history
             }
+        vocabularies = {}
+        if self.vocabularies:
+            vocabs = self.vocabularies.split('\n')
+            for vocabulary in vocabs:
+                factory = getUtility(IVocabularyFactory, vocabulary)
+                vocabularies[vocabulary] = {
+                    key: val for val, key in factory(item).data.iteritems()
+                }
+
         cp = PyScript(self.value_script)
         cp_globals = dict(
             context=item,
             state=state,
             workflow=wft,
             history=history,
+            vocabularies=vocabularies,
             event=self.event,
             values={},
         )

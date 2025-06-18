@@ -29,7 +29,7 @@ class ISetFieldAction(model.Schema):
             u"Enter PythonScript to calculate the values you want to"
             u" set. Return a dictionary of {'field': value}. "
             u"Available variables are: context, state, history, "
-            u"event"
+            u"event, vocabularies"
         ),
         default=_(u"""# values = {'field': some_value}"""),
         required=True,
@@ -55,6 +55,17 @@ class ISetFieldAction(model.Schema):
             " this setting will not override it"
         ),
     )
+    
+    vocabularies = schema.Text(
+        title=_("Vocabularies"),
+        description=_(
+            "Put any vocabularies you want available in your script here, one"
+            "per line. e.g. plone.app.vocabularies.Users."
+            "They will be available in a dict called vocabularies in the script"
+        ),
+        default=_(""),
+        required=False
+    )
 
     model.fieldset(
         "script",
@@ -65,7 +76,7 @@ class ISetFieldAction(model.Schema):
     model.fieldset(
         "advanced",
         label=_(u"Advanced"),
-        fields=["update_all", "preserve_modification_date"],
+        fields=["update_all", "preserve_modification_date", "vocabularies"],
     )
 
 
