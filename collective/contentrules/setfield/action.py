@@ -219,7 +219,7 @@ class SetFieldActionExecutor(object):
             for vocabulary in vocabs:
                 factory = getUtility(IVocabularyFactory, vocabulary)
                 vocabularies[vocabulary] = {
-                    lang: val for val, lang in factory(item).data.iteritems()
+                    key: val for val, key in factory(item).data.iteritems()
                 }
 
         cp = PyScript(self.value_script)
